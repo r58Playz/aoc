@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use std::io::Read;
 
 fn clean_string(s: String) -> String {

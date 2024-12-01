@@ -1,8 +1,6 @@
-use std::fs;
-
 use anyhow::Result;
 
-mod day1;
+pub mod day1;
 
 fn main() -> Result<()> {
     day1::main()?;

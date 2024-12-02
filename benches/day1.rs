@@ -13,7 +13,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 				|| input.clone(),
 				|(ref mut l, ref mut r)| part1(l, r),
 				BatchSize::SmallInput,
-			)
+			);
 		},
 	);
 	c.bench_with_input(
@@ -24,7 +24,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 				|| input.clone(),
 				|(ref mut l, ref mut r)| part2(l, r),
 				BatchSize::SmallInput,
-			)
+			);
 		},
 	);
 
@@ -36,7 +36,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 				|| input.clone(),
 				|(ref mut l, ref mut r)| part1(l, r),
 				BatchSize::SmallInput,
-			)
+			);
 		},
 	);
 	c.bench_with_input(
@@ -47,7 +47,7 @@ fn criterion_benchmark(c: &mut Criterion) {
 				|| input.clone(),
 				|(ref mut l, ref mut r)| part2(l, r),
 				BatchSize::SmallInput,
-			)
+			);
 		},
 	);
 }

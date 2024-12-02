@@ -62,10 +62,10 @@ pub fn main() -> Result<()> {
 	let (mut left, mut right) = parse(&input)?;
 
 	let dist = part1(&mut left, &mut right);
-	println!("dist {:?}", dist);
+	println!("dist {dist:?}");
 
 	let similarity = part2(&mut left, &mut right);
-	println!("similarity {:?}", similarity);
+	println!("similarity {similarity:?}");
 
 	Ok(())
 }

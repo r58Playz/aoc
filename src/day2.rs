@@ -32,8 +32,8 @@ pub fn part1(data: &[Vec<i32>]) -> usize {
 }
 
 pub fn part2(data: &[Vec<i32>]) -> usize {
-	// magic number
-	let mut tmp = Vec::with_capacity(7);
+	// magic number - max items in input is 8, subtract 1 and square
+	let mut tmp = Vec::with_capacity(49);
 	data.iter()
 		.map(|x| (validate(x), x))
 		.filter(|(ok, x)| {
@@ -43,9 +43,9 @@ pub fn part2(data: &[Vec<i32>]) -> usize {
 				for i in 0..x.len() {
 					x.iter()
 						.enumerate()
-						.filter(|(x, _)| *x != i)
-						.map(|(_, x)| *x)
+						.filter_map(|(idx, x)| (idx != i).then_some(x))
 						.collect_into(&mut tmp);
+
 					if validate(&tmp) {
 						return true;
 					}
@@ -61,10 +61,10 @@ pub fn main() -> Result<()> {
 	let data = parse(&input)?;
 
 	let part1 = part1(&data);
-	println!("part1 {:?}", part1);
+	println!("part1 {part1}");
 
 	let part2 = part2(&data);
-	println!("part2 {:?}", part2);
+	println!("part2 {part2}");
 
 	Ok(())
 }

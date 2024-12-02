@@ -3,6 +3,7 @@ name = "aoc"
 version = "0.1.0"
 edition = "2021"
 
+# used in benches
 [lib]
 name = "aoc"
 
@@ -14,6 +15,19 @@ rayon = "1.10.0"
 [dev-dependencies]
 criterion = "0.5.1"
 
+[profile.release]
+codegen-units = 1
+lto = true
+
+[profile.bench]
+codegen-units = 1
+lto = true
+
+# benches - 1 per day
 [[bench]]
 name = "day1"
+harness = false
+
+[[bench]]
+name = "day2"
 harness = false

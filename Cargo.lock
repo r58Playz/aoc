@@ -37,6 +37,7 @@ dependencies = [
  "criterion",
  "nohash-hasher",
  "rayon",
+ "regex",
 ]
 
 [[package]]

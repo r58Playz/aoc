@@ -1,9 +1,9 @@
-use aoc::day2::{parse, part1, part2};
+use aoc::{day2::{parse, part1, part2}, get_path};
 use criterion::{criterion_group, criterion_main, BatchSize, BenchmarkId, Criterion};
 
 fn criterion_benchmark(c: &mut Criterion) {
-	let input = parse("/home/r58playz/Documents/aoc/day2/input").unwrap();
-	let example = parse("/home/r58playz/Documents/aoc/day2/example").unwrap();
+	let input = parse(get_path!("/day2/input")).unwrap();
+	let example = parse(get_path!("/day2/example")).unwrap();
 
 	c.bench_with_input(
 		BenchmarkId::new("day2/part1", "example"),

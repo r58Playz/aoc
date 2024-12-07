@@ -55,12 +55,10 @@ impl TryFrom<char> for Position {
 	}
 }
 
-pub fn part1(map: &HashMap<(usize, usize), Position>) -> Result<usize> {
-	let mut loc = map
-		.iter()
-		.find_map(|x| (*x.1 == Position::Guard).then_some(*x.0))
-		.context("no guard found")?;
-
+fn walk(
+	map: &HashMap<(usize, usize), Position>,
+	mut loc: (usize, usize),
+) -> HashSet<(usize, usize)> {
 	let mut dir = Direction::Up;
 
 	let mut set = HashSet::new();
@@ -78,7 +76,16 @@ pub fn part1(map: &HashMap<(usize, usize), Position>) -> Result<usize> {
 		set.insert(loc);
 	}
 
-	Ok(set.len())
+	set
+}
+
+pub fn part1(map: &HashMap<(usize, usize), Position>) -> Result<usize> {
+	let loc = map
+		.iter()
+		.find_map(|x| (*x.1 == Position::Guard).then_some(*x.0))
+		.context("no guard found")?;
+
+	Ok(walk(map, loc).len())
 }
 
 pub fn part2(map: &HashMap<(usize, usize), Position>) -> Result<usize> {
@@ -87,37 +94,32 @@ pub fn part2(map: &HashMap<(usize, usize), Position>) -> Result<usize> {
 		.find_map(|x| (*x.1 == Position::Guard).then_some(*x.0))
 		.context("no guard found")?;
 
-	let cnt = map
+	let cnt = walk(map, loc)
 		.par_iter()
-		.filter(|(obstacle_loc, thing)| {
-			if **thing == Position::Empty {
-				let mut map = map.clone();
-				map.insert(**obstacle_loc, Position::Obstacle);
-				let mut dir = Direction::Up;
+		.filter(|obstacle_loc| {
+			let mut dir = Direction::Up;
 
-				let mut loc = loc;
+			let mut loc = loc;
 
-				let mut set = HashMap::new();
-				set.insert(loc, dir);
+			let mut set = HashMap::new();
+			set.insert(loc, dir);
 
-				while let Some(thing) = map.get(&dir.apply(loc)) {
-					match thing {
-						Position::Empty | Position::Guard => {
-							loc = dir.apply(loc);
-						}
-						Position::Obstacle => {
-							dir = dir.next();
-						}
+			while let Some(thing) = map.get(&dir.apply(loc)) {
+				match (thing, dir.apply(loc) == **obstacle_loc) {
+					(Position::Empty | Position::Guard, false) => {
+						loc = dir.apply(loc);
 					}
-					if let Some(olddir) = set.get(&loc) {
-						if dir == *olddir {
-							return true;
-						}
-					} else {
-						set.insert(loc, dir);
+					(Position::Empty | Position::Guard, true) | (Position::Obstacle, _) => {
+						dir = dir.next();
 					}
 				}
-				return false;
+				if let Some(olddir) = set.get(&loc) {
+					if dir == *olddir {
+						return true;
+					}
+				} else {
+					set.insert(loc, dir);
+				}
 			}
 			false
 		})

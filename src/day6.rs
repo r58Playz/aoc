@@ -1,11 +1,7 @@
-use std::{
-	collections::{HashMap, HashSet},
-	env,
-	fs::read_to_string,
-};
+use std::{env, fs::read_to_string};
 
+use ahash::{AHashMap, AHashSet};
 use anyhow::{bail, Context, Result};
-use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Position {
@@ -23,7 +19,7 @@ enum Direction {
 }
 
 impl Direction {
-	pub fn next(&self) -> Self {
+	pub fn next(self) -> Self {
 		match self {
 			Self::Up => Self::Right,
 			Self::Right => Self::Down,
@@ -32,7 +28,7 @@ impl Direction {
 		}
 	}
 
-	pub fn apply(&self, loc: (usize, usize)) -> (usize, usize) {
+	pub fn apply(self, loc: (usize, usize)) -> (usize, usize) {
 		match self {
 			Direction::Up => (loc.0, loc.1 - 1),
 			Direction::Down => (loc.0, loc.1 + 1),
@@ -56,12 +52,12 @@ impl TryFrom<char> for Position {
 }
 
 fn walk(
-	map: &HashMap<(usize, usize), Position>,
+	map: &AHashMap<(usize, usize), Position>,
 	mut loc: (usize, usize),
-) -> HashSet<(usize, usize)> {
+) -> AHashSet<(usize, usize)> {
 	let mut dir = Direction::Up;
 
-	let mut set = HashSet::new();
+	let mut set = AHashSet::new();
 	set.insert(loc);
 
 	while let Some(thing) = map.get(&dir.apply(loc)) {
@@ -79,7 +75,7 @@ fn walk(
 	set
 }
 
-pub fn part1(map: &HashMap<(usize, usize), Position>) -> Result<usize> {
+pub fn part1(map: &AHashMap<(usize, usize), Position>) -> Result<usize> {
 	let loc = map
 		.iter()
 		.find_map(|x| (*x.1 == Position::Guard).then_some(*x.0))
@@ -88,24 +84,25 @@ pub fn part1(map: &HashMap<(usize, usize), Position>) -> Result<usize> {
 	Ok(walk(map, loc).len())
 }
 
-pub fn part2(map: &HashMap<(usize, usize), Position>) -> Result<usize> {
+pub fn part2(map: &AHashMap<(usize, usize), Position>) -> Result<usize> {
 	let loc = map
 		.iter()
 		.find_map(|x| (*x.1 == Position::Guard).then_some(*x.0))
 		.context("no guard found")?;
 
+	let mut set = AHashMap::new();
+
 	let cnt = walk(map, loc)
-		.par_iter()
+		.into_iter()
 		.filter(|obstacle_loc| {
 			let mut dir = Direction::Up;
 
 			let mut loc = loc;
 
-			let mut set = HashMap::new();
 			set.insert(loc, dir);
 
 			while let Some(thing) = map.get(&dir.apply(loc)) {
-				match (thing, dir.apply(loc) == **obstacle_loc) {
+				match (thing, dir.apply(loc) == *obstacle_loc) {
 					(Position::Empty | Position::Guard, false) => {
 						loc = dir.apply(loc);
 					}
@@ -115,19 +112,21 @@ pub fn part2(map: &HashMap<(usize, usize), Position>) -> Result<usize> {
 				}
 				if let Some(olddir) = set.get(&loc) {
 					if dir == *olddir {
+						set.clear();
 						return true;
 					}
 				} else {
 					set.insert(loc, dir);
 				}
 			}
+			set.clear();
 			false
 		})
 		.count();
 	Ok(cnt)
 }
 
-pub fn parse(input: &str) -> Result<HashMap<(usize, usize), Position>> {
+pub fn parse(input: &str) -> Result<AHashMap<(usize, usize), Position>> {
 	let input = read_to_string(input).context("failed to read input")?;
 
 	let ret: Result<_> = input

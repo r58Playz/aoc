@@ -1,6 +1,6 @@
 use std::{env, fs::read_to_string};
 
-use ahash::{AHashMap, AHashSet};
+use rustc_hash::{FxHashMap, FxHashSet};
 use anyhow::{bail, Context, Result};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -52,12 +52,12 @@ impl TryFrom<char> for Position {
 }
 
 fn walk(
-	map: &AHashMap<(usize, usize), Position>,
+	map: &FxHashMap<(usize, usize), Position>,
 	mut loc: (usize, usize),
-) -> AHashSet<(usize, usize)> {
+) -> FxHashSet<(usize, usize)> {
 	let mut dir = Direction::Up;
 
-	let mut set = AHashSet::new();
+	let mut set = FxHashSet::default();
 	set.insert(loc);
 
 	while let Some(thing) = map.get(&dir.apply(loc)) {
@@ -75,7 +75,7 @@ fn walk(
 	set
 }
 
-pub fn part1(map: &AHashMap<(usize, usize), Position>) -> Result<usize> {
+pub fn part1(map: &FxHashMap<(usize, usize), Position>) -> Result<usize> {
 	let loc = map
 		.iter()
 		.find_map(|x| (*x.1 == Position::Guard).then_some(*x.0))
@@ -84,13 +84,13 @@ pub fn part1(map: &AHashMap<(usize, usize), Position>) -> Result<usize> {
 	Ok(walk(map, loc).len())
 }
 
-pub fn part2(map: &AHashMap<(usize, usize), Position>) -> Result<usize> {
+pub fn part2(map: &FxHashMap<(usize, usize), Position>) -> Result<usize> {
 	let loc = map
 		.iter()
 		.find_map(|x| (*x.1 == Position::Guard).then_some(*x.0))
 		.context("no guard found")?;
 
-	let mut set = AHashMap::new();
+	let mut set = FxHashMap::default();
 
 	let cnt = walk(map, loc)
 		.into_iter()
@@ -126,7 +126,7 @@ pub fn part2(map: &AHashMap<(usize, usize), Position>) -> Result<usize> {
 	Ok(cnt)
 }
 
-pub fn parse(input: &str) -> Result<AHashMap<(usize, usize), Position>> {
+pub fn parse(input: &str) -> Result<FxHashMap<(usize, usize), Position>> {
 	let input = read_to_string(input).context("failed to read input")?;
 
 	let ret: Result<_> = input

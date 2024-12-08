@@ -22,8 +22,10 @@ criterion = "0.5.1"
 [lints.clippy]
 pedantic = { level = "warn", priority = -1 }
 missing_errors_doc = "allow"
+missing_panics_doc = "allow"
 must_use_candidate = "allow"
 implicit_hasher = "allow"
+type_complexity = "allow"
 
 [profile.release]
 codegen-units = 1
@@ -52,4 +54,8 @@ harness = false
 
 [[bench]]
 name = "day7"
+harness = false
+
+[[bench]]
+name = "day8"
 harness = false

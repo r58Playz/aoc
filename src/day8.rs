@@ -2,7 +2,7 @@ use std::{env, fs::read_to_string};
 
 use anyhow::{bail, Context, Result};
 use itertools::Itertools;
-use rustc_hash::FxHashMap;
+use rustc_hash::{FxHashMap, FxHashSet};
 
 fn dist(l: &(usize, usize), r: &(usize, usize)) -> (isize, isize) {
 	(
@@ -13,13 +13,10 @@ fn dist(l: &(usize, usize), r: &(usize, usize)) -> (isize, isize) {
 fn inbounds(x: &(usize, usize), size: &(usize, usize)) -> bool {
 	x.0 < size.0 && x.1 < size.1
 }
+pub fn part1((data, size): &(Vec<Vec<(usize, usize)>>, (usize, usize))) -> Result<usize> {
+	let mut map: FxHashSet<(usize, usize)> = FxHashSet::default();
 
-pub fn part1(
-	(data, size): &(FxHashMap<char, Vec<(usize, usize)>>, (usize, usize)),
-) -> Result<usize> {
-	let mut map: FxHashMap<(usize, usize), char> = FxHashMap::default();
-
-	for (thing, locs) in data {
+	for locs in data {
 		for (loc, otherloc) in locs.iter().tuple_combinations() {
 			let dist = dist(loc, otherloc);
 			let node1 = (
@@ -31,10 +28,10 @@ pub fn part1(
 				otherloc.1.wrapping_add_signed(dist.1),
 			);
 			if inbounds(&node1, size) {
-				map.insert(node1, *thing);
+				map.insert(node1);
 			}
 			if inbounds(&node2, size) {
-				map.insert(node2, *thing);
+				map.insert(node2);
 			}
 		}
 	}
@@ -42,26 +39,24 @@ pub fn part1(
 	Ok(map.len())
 }
 
-pub fn part2(
-	(data, size): &(FxHashMap<char, Vec<(usize, usize)>>, (usize, usize)),
-) -> Result<usize> {
-	let mut map: FxHashMap<(usize, usize), char> = FxHashMap::default();
+pub fn part2((data, size): &(Vec<Vec<(usize, usize)>>, (usize, usize))) -> Result<usize> {
+	let mut map: FxHashSet<(usize, usize)> = FxHashSet::default();
 
-	for (thing, locs) in data {
+	for locs in data {
 		for (loc, otherloc) in locs.iter().tuple_combinations() {
 			let dist = dist(loc, otherloc);
 
 			let mut node1 = *loc;
 			let mut node2 = *otherloc;
 			while inbounds(&node1, size) {
-				map.insert(node1, *thing);
+				map.insert(node1);
 				node1 = (
 					node1.0.overflowing_add_signed(-dist.0).0,
 					node1.1.overflowing_add_signed(-dist.1).0,
 				);
 			}
 			while inbounds(&node2, size) {
-				map.insert(node2, *thing);
+				map.insert(node2);
 				node2 = (
 					node2.0.overflowing_add_signed(dist.0).0,
 					node2.1.overflowing_add_signed(dist.1).0,
@@ -73,7 +68,7 @@ pub fn part2(
 	Ok(map.len())
 }
 
-pub fn parse(input: &str) -> Result<(FxHashMap<char, Vec<(usize, usize)>>, (usize, usize))> {
+pub fn parse(input: &str) -> Result<(Vec<Vec<(usize, usize)>>, (usize, usize))> {
 	let input = read_to_string(input).context("failed to read input")?;
 
 	let mut map = FxHashMap::default();
@@ -95,7 +90,7 @@ pub fn parse(input: &str) -> Result<(FxHashMap<char, Vec<(usize, usize)>>, (usiz
 		})?;
 
 	Ok((
-		map,
+		map.into_iter().map(|x| x.1).collect(),
 		(
 			input.lines().next().context("input empty")?.len(),
 			input.lines().count(),

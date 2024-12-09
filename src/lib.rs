@@ -3,7 +3,8 @@
 	iter_collect_into,
 	iterator_try_collect,
 	array_windows,
-	unsigned_signed_diff
+	unsigned_signed_diff,
+	let_chains,
 )]
 
 pub mod day1;
@@ -14,6 +15,7 @@ pub mod day5;
 pub mod day6;
 pub mod day7;
 pub mod day8;
+pub mod day9;
 
 #[macro_export]
 macro_rules! get_path {

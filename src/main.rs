@@ -4,6 +4,7 @@
 	iterator_try_collect,
 	array_windows,
 	unsigned_signed_diff,
+	let_chains,
 )]
 
 use anyhow::Result;
@@ -16,6 +17,7 @@ pub mod day5;
 pub mod day6;
 pub mod day7;
 pub mod day8;
+pub mod day9;
 
 fn main() -> Result<()> {
 	// day1::main()
@@ -25,5 +27,6 @@ fn main() -> Result<()> {
 	// day5::main()
 	// day6::main()
 	// day7::main()
-	day8::main()
+	// day8::main()
+	day9::main()
 }

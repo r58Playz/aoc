@@ -18,6 +18,7 @@ pub mod day6;
 pub mod day7;
 pub mod day8;
 pub mod day9;
+pub mod day10;
 
 fn main() -> Result<()> {
 	// day1::main()
@@ -28,5 +29,6 @@ fn main() -> Result<()> {
 	// day6::main()
 	// day7::main()
 	// day8::main()
-	day9::main()
+	// day9::main()
+	day10::main()
 }

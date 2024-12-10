@@ -22,47 +22,38 @@ pub fn calc(
 }
 
 pub fn part1(data: &FxHashMap<(usize, usize), u8>) -> Result<usize> {
+	let mut set = FxHashSet::default();
 	Ok(data
 		.iter()
 		.filter(|(x, y)| **y == 0)
 		.map(|(x, _)| {
-			let mut set = FxHashSet::default();
 			calc(data, *x, 0, &mut set);
-			set.len()
+			let len = set.len();
+			set.clear();
+			len
 		})
 		.sum())
 }
 
-pub fn calc2(
-	data: &FxHashMap<(usize, usize), u8>,
-	loc: (usize, usize),
-	num: u8,
-	set: &mut FxHashSet<Vec<(usize, usize)>>,
-	mut curr: Vec<(usize, usize)>,
-) {
+pub fn calc2(data: &FxHashMap<(usize, usize), u8>, loc: (usize, usize), num: u8) -> usize {
 	if let Some(x) = data.get(&loc) {
 		if *x == 9 && *x == num {
-			curr.push(loc);
-			set.insert(curr);
+			return 1;
 		} else if *x == num {
-			curr.push(loc);
-			calc2(data, (loc.0 - 1, loc.1), num + 1, set, curr.clone());
-			calc2(data, (loc.0 + 1, loc.1), num + 1, set, curr.clone());
-			calc2(data, (loc.0, loc.1 - 1), num + 1, set, curr.clone());
-			calc2(data, (loc.0, loc.1 + 1), num + 1, set, curr);
+			return calc2(data, (loc.0 - 1, loc.1), num + 1)
+				+ calc2(data, (loc.0 + 1, loc.1), num + 1)
+				+ calc2(data, (loc.0, loc.1 - 1), num + 1)
+				+ calc2(data, (loc.0, loc.1 + 1), num + 1);
 		}
 	}
+	0
 }
 
 pub fn part2(data: &FxHashMap<(usize, usize), u8>) -> Result<usize> {
 	Ok(data
 		.iter()
 		.filter(|(x, y)| **y == 0)
-		.map(|(x, _)| {
-			let mut set = FxHashSet::default();
-			calc2(data, *x, 0, &mut set, Vec::new());
-			set.len()
-		})
+		.map(|(x, _)| calc2(data, *x, 0))
 		.sum())
 }
 
@@ -79,7 +70,6 @@ pub fn parse(input: &str) -> Result<FxHashMap<(usize, usize), u8>> {
 				x.1.to_digit(10).context("failed to parse digit")? as u8,
 			))
 		})
-		.filter(|x| x.is_ok())
 		.collect()
 }
 

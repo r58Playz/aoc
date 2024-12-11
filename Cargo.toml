@@ -15,6 +15,7 @@ nohash-hasher = "0.2.0"
 rayon = "1.10.0"
 regex = "1.11.1"
 rustc-hash = "2.1.0"
+smallvec = "1.13.2"
 
 [dev-dependencies]
 criterion = "0.5.1"
@@ -30,6 +31,7 @@ type_complexity = "allow"
 [profile.release]
 codegen-units = 1
 lto = true
+debug = true
 
 [profile.bench]
 codegen-units = 1
@@ -58,4 +60,8 @@ harness = false
 
 [[bench]]
 name = "day8"
+harness = false
+
+[[bench]]
+name = "day11"
 harness = false

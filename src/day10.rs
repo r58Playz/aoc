@@ -25,7 +25,7 @@ pub fn part1(data: &FxHashMap<(usize, usize), u8>) -> Result<usize> {
 	let mut set = FxHashSet::default();
 	Ok(data
 		.iter()
-		.filter(|(x, y)| **y == 0)
+		.filter(|(_, y)| **y == 0)
 		.map(|(x, _)| {
 			calc(data, *x, 0, &mut set);
 			let len = set.len();

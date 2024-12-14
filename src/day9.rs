@@ -41,7 +41,7 @@ pub fn part2(data: &[Option<u64>]) -> Result<u64> {
 				emptysize += 1;
 			}
 			if size <= emptysize {
-				maybeemptystart.insert(emptystart);
+				maybeemptystart.replace(emptystart);
 				break;
 			}
 		}

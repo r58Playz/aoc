@@ -2,55 +2,75 @@ use std::{env, fs::read_to_string};
 
 use anyhow::{Context, Result};
 
-type Pt = (usize, usize);
+type Pt = (isize, isize);
 
-pub fn part1(data: &[(Pt, Pt, Pt)]) -> Result<usize> {
+pub fn part1(data: &[(Pt, Pt, Pt)]) -> Result<isize> {
 	let mut cnt = 0;
 
 	for (aoffset, boffset, goal) in data {
-		let a1 = aoffset.0 as f64;
-		let a2 = aoffset.1 as f64;
-		let b1 = boffset.0 as f64;
-		let b2 = boffset.1 as f64;
-		let g1 = goal.0 as f64;
-		let g2 = goal.1 as f64;
+		let a1 = aoffset.0;
+		let a2 = aoffset.1;
+		let b1 = boffset.0;
+		let b2 = boffset.1;
+		let g1 = goal.0;
+		let g2 = goal.1;
 
-		let x = (g1 * b2 - b1 * g2) / (a1 * b2 - a2 * b1);
-		let y = (g1 - a1 * x) / b1;
-
-		if x.floor() == x && y.floor() == y {
-			cnt += x as usize * 3 + y as usize;
+		let xtop = g1 * b2 - b1 * g2;
+		let xbtm = a1 * b2 - a2 * b1;
+		if xtop % xbtm != 0 {
+			continue;
 		}
+		let x = xtop / xbtm;
+
+		let ytop = g1 - a1 * x;
+		let ybtm = b1;
+
+		if ytop % ybtm != 0 {
+			continue;
+		}
+		let y = ytop / ybtm;
+
+		cnt += x * 3 + y;
 	}
 
 	Ok(cnt)
 }
 
-pub fn part2(data: &[(Pt, Pt, Pt)]) -> Result<usize> {
+pub fn part2(data: &[(Pt, Pt, Pt)]) -> Result<isize> {
 	let mut cnt = 0;
 
 	for (aoffset, boffset, goal) in data {
-		let goal = (goal.0 + 10000000000000, goal.1 + 10000000000000);
+		let goal = (goal.0 + 10_000_000_000_000, goal.1 + 10_000_000_000_000);
 
-		let a1 = aoffset.0 as f64;
-		let a2 = aoffset.1 as f64;
-		let b1 = boffset.0 as f64;
-		let b2 = boffset.1 as f64;
-		let g1 = goal.0 as f64;
-		let g2 = goal.1 as f64;
+		let a1 = aoffset.0;
+		let a2 = aoffset.1;
+		let b1 = boffset.0;
+		let b2 = boffset.1;
+		let g1 = goal.0;
+		let g2 = goal.1;
 
-		let x = (g1 * b2 - b1 * g2) / (a1 * b2 - a2 * b1);
-		let y = (g1 - a1 * x) / b1;
-
-		if x.floor() == x && y.floor() == y {
-			cnt += x as usize * 3 + y as usize;
+		let xtop = g1 * b2 - b1 * g2;
+		let xbtm = a1 * b2 - a2 * b1;
+		if xtop % xbtm != 0 {
+			continue;
 		}
+		let x = xtop / xbtm;
+
+		let ytop = g1 - a1 * x;
+		let ybtm = b1;
+
+		if ytop % ybtm != 0 {
+			continue;
+		}
+		let y = ytop / ybtm;
+
+		cnt += x * 3 + y;
 	}
 
 	Ok(cnt)
 }
 
-fn parsept(str: &str, delim: &str) -> Result<(usize, usize)> {
+fn parsept(str: &str, delim: &str) -> Result<Pt> {
 	let str = str.split_once(": ").context("failed to split line")?.1;
 	let (l, r) = str
 		.split_once(", ")

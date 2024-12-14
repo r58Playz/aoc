@@ -1,7 +1,7 @@
 use std::{env, fs::read_to_string};
 
 use anyhow::{Context, Result};
-use rustc_hash::{FxHashMap, FxHashSet};
+use rustc_hash::FxHashMap;
 
 pub fn build(
 	data: &FxHashMap<(usize, usize), char>,

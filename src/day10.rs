@@ -52,7 +52,7 @@ pub fn calc2(data: &FxHashMap<(usize, usize), u8>, loc: (usize, usize), num: u8)
 pub fn part2(data: &FxHashMap<(usize, usize), u8>) -> Result<usize> {
 	Ok(data
 		.iter()
-		.filter(|(x, y)| **y == 0)
+		.filter(|(_, y)| **y == 0)
 		.map(|(x, _)| calc2(data, *x, 0))
 		.sum())
 }

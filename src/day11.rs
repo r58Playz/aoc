@@ -35,11 +35,10 @@ fn evolve_recurse<const MAX: usize>(
 	let ret;
 	let newdepth = depth + 1;
 
+	let digits = digits(n);
 	if n == 0 {
 		ret = evolve_recurse(1, newdepth, cache);
-	} else if let digits = digits(n)
-		&& digits % 2 == 0
-	{
+	} else if digits % 2 == 0 {
 		let (l, r) = split(n, digits);
 		ret = evolve_recurse(l, newdepth, cache) + evolve_recurse(r, newdepth, cache);
 	} else {

@@ -1,4 +1,4 @@
-use std::{env, fs::read_to_string};
+use std::fs::read_to_string;
 
 use anyhow::{Context, Result};
 
@@ -108,9 +108,8 @@ pub fn parse(input: &str) -> Result<Vec<(Pt, Pt, Pt)>> {
 		.collect()
 }
 
-pub fn main() -> Result<()> {
-	let input = env::args().nth(1).context("no input")?;
-	let data = parse(&input)?;
+pub fn main(input: &str) -> Result<()> {
+	let data = parse(input)?;
 
 	dbg!(part1(&data)?);
 	dbg!(part2(&data)?);

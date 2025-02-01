@@ -1,4 +1,4 @@
-use std::{env, fs::read_to_string, time::Instant};
+use std::{fs::read_to_string, time::Instant};
 
 use anyhow::{anyhow, Context, Result};
 use itertools::Itertools;
@@ -91,9 +91,8 @@ pub fn parse1(input: &str) -> Result<Vec<Option<u64>>> {
 	Ok(vec)
 }
 
-pub fn main() -> Result<()> {
-	let input = env::args().nth(1).context("no input")?;
-	let data1 = parse1(&input)?;
+pub fn main(input: &str) -> Result<()> {
+	let data1 = parse1(input)?;
 
 	let start = Instant::now();
 	let x = part1(&data1)?;

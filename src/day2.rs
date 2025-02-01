@@ -1,4 +1,4 @@
-use std::{env, fs::read_to_string};
+use std::fs::read_to_string;
 
 use anyhow::{Context, Result};
 
@@ -56,9 +56,8 @@ pub fn part2(data: &[Vec<i32>]) -> usize {
 		.count()
 }
 
-pub fn main() -> Result<()> {
-	let input = env::args().nth(1).context("no input")?;
-	let data = parse(&input)?;
+pub fn main(input: &str) -> Result<()> {
+	let data = parse(input)?;
 
 	let part1 = part1(&data);
 	println!("part1 {part1}");

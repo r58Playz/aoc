@@ -1,4 +1,4 @@
-use std::{env, fs::read_to_string};
+use std::fs::read_to_string;
 
 use rustc_hash::{FxHashMap, FxHashSet};
 use anyhow::{bail, Context, Result};
@@ -141,9 +141,8 @@ pub fn parse(input: &str) -> Result<FxHashMap<(usize, usize), Position>> {
 	ret
 }
 
-pub fn main() -> Result<()> {
-	let input = env::args().nth(1).context("no input")?;
-	let data = parse(&input)?;
+pub fn main(input: &str) -> Result<()> {
+	let data = parse(input)?;
 
 	println!("part1 {}", part1(&data)?);
 	println!("part2 {}", part2(&data)?);

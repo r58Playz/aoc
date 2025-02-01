@@ -9,6 +9,7 @@ name = "aoc"
 
 [dependencies]
 anyhow = "1.0.93"
+clap = { version = "4.5.27", features = ["cargo", "derive"] }
 itertools = "0.13.0"
 nohash-hasher = "0.2.0"
 rayon = "1.10.0"

@@ -1,4 +1,4 @@
-use std::{env, fs::read_to_string};
+use std::fs::read_to_string;
 
 use anyhow::{Context, Result};
 use rustc_hash::FxHashSet;
@@ -99,9 +99,8 @@ pub fn parse(input: &str) -> Result<Vec<((isize, isize), (isize, isize))>> {
 		.collect()
 }
 
-pub fn main() -> Result<()> {
-	let input = env::args().nth(1).context("no input")?;
-	let data = parse(&input)?;
+pub fn main(input: &str) -> Result<()> {
+	let data = parse(input)?;
 
 	println!("part1 {}", part1(data.clone())?);
 	println!("part2 {}", part2(data.clone())?);

@@ -1,4 +1,4 @@
-use std::{env, fs::read_to_string};
+use std::fs::read_to_string;
 
 use anyhow::{bail, Context, Result};
 
@@ -95,9 +95,8 @@ pub fn parse(input: &str) -> Result<(Vec<(usize, usize)>, Vec<Vec<usize>>)> {
 	Ok((rules, updates))
 }
 
-pub fn main() -> Result<()> {
-	let input = env::args().nth(1).context("no input")?;
-	let (rules, updates) = parse(&input)?;
+pub fn main(input: &str) -> Result<()> {
+	let (rules, updates) = parse(input)?;
 
 	println!("part1 {}", part1(rules.clone(), updates.clone())?);
 	println!("part2 {}", part2(rules.clone(), updates.clone())?);

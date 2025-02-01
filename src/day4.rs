@@ -1,4 +1,4 @@
-use std::{env, fs::read_to_string};
+use std::fs::read_to_string;
 
 use anyhow::{Context, Result};
 
@@ -80,9 +80,8 @@ pub fn parse(input: &str) -> Result<Vec<Vec<char>>> {
 	Ok(input.lines().map(|x| x.chars().collect()).collect())
 }
 
-pub fn main() -> Result<()> {
-	let input = env::args().nth(1).context("no input")?;
-	let data = parse(&input)?;
+pub fn main(input: &str) -> Result<()> {
+	let data = parse(input)?;
 
 	println!("part1 {}", part1(&data)?);
 	println!("part2 {}", part2(&data)?);

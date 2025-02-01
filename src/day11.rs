@@ -1,4 +1,4 @@
-use std::{env, fs::read_to_string, time::Instant};
+use std::{fs::read_to_string, time::Instant};
 
 use anyhow::{Context, Result};
 use rustc_hash::FxHashMap;
@@ -76,10 +76,9 @@ pub fn parse(input: &str) -> Result<Vec<u64>> {
 		.collect()
 }
 
-pub fn main() -> Result<()> {
-	let input = env::args().nth(1).context("no input")?;
+pub fn main(input: &str) -> Result<()> {
 	let before = Instant::now();
-	let data = parse(&input)?;
+	let data = parse(input)?;
 	dbg!(before.elapsed());
 
 	let before = Instant::now();

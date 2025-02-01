@@ -1,4 +1,4 @@
-use std::{env, fs};
+use std::fs;
 
 use anyhow::{Context, Result};
 use nohash_hasher::IntMap;
@@ -57,9 +57,8 @@ pub fn part2(left: &mut [i64], right: &mut [i64]) -> i64 {
 	similarity
 }
 
-pub fn main() -> Result<()> {
-	let input = env::args().nth(1).context("no input")?;
-	let (mut left, mut right) = parse(&input)?;
+pub fn main(input: &str) -> Result<()> {
+	let (mut left, mut right) = parse(input)?;
 
 	let dist = part1(&mut left, &mut right);
 	println!("dist {dist:?}");
